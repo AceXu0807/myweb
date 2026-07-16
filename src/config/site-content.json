@@ -1,18 +1,18 @@
 {
 	"meta": {
 		"title": "时沐风炎的小窝",
-		"description": "时沐风炎的个人博客，记录技术文章、学习笔记、生活片段与作品。",
+		"description": "时沐风炎的个人博客，记录技术文章、学习笔记、生活片段与作品。\n在时光的风中沐浴，迸发炎炎赤诚之心",
 		"username": "时沐风炎"
 	},
 	"theme": {
 		"colorBrand": "#2fcbe7",
-		"colorPrimary": "#5B423F",
-		"colorSecondary": "#8b7667",
+		"colorPrimary": "#413a39",
+		"colorSecondary": "#897261",
 		"colorBrandSecondary": "#eec25e",
 		"colorBg": "#d4e8f3",
-		"colorBorder": "#ffffff",
-		"colorCard": "#ffffff99",
-		"colorArticle": "#ffffffcc"
+		"colorBorder": "#a0c98a",
+		"colorCard": "#bae6dc99",
+		"colorArticle": "#ece3b6dd"
 	},
 	"backgroundColors": [
 		"#f7da3987",
@@ -31,19 +31,43 @@
 		{
 			"id": "1c7b726fe720679b",
 			"url": "/images/art/1c7b726fe720679b.jpg"
+		},
+		{
+			"id": "983217a44b057ad5",
+			"url": "/images/art/983217a44b057ad5.jpg"
+		},
+		{
+			"id": "55eff7834fef46f6",
+			"url": "/images/art/55eff7834fef46f6.jpg"
+		},
+		{
+			"id": "d249efd5b0c302aa",
+			"url": "/images/art/d249efd5b0c302aa.jpg"
 		}
 	],
-	"currentArtImageId": "1c7b726fe720679b",
+	"currentArtImageId": "d249efd5b0c302aa",
 	"backgroundImages": [
 		{
 			"id": "",
 			"url": ""
+		},
+		{
+			"id": "983217a44b057ad5",
+			"url": "/images/background/983217a44b057ad5.jpg"
 		}
 	],
-	"currentBackgroundImageId": "",
-	"socialButtons": [],
+	"currentBackgroundImageId": "983217a44b057ad5",
+	"socialButtons": [
+		{
+			"id": "button-1784215849421",
+			"type": "link",
+			"value": "",
+			"label": "",
+			"order": 1
+		}
+	],
 	"clockShowSeconds": false,
-	"summaryInContent": false,
+	"summaryInContent": true,
 	"isCachePem": false,
 	"hideEditButton": false,
 	"enableCategories": true,
