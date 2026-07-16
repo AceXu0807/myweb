@@ -59,24 +59,24 @@
 	"currentBackgroundImageId": "983217a44b057ad5",
 	"socialButtons": [
 		{
-			"id": "button-1784221239331",
-			"type": "email",
-			"value": "xnj13735326873@gmail.com",
-			"label": "",
-			"order": 1
-		},
-		{
 			"id": "button-1784215849421",
 			"type": "github",
 			"value": "https://github.com/AceXu0807",
 			"label": "Github",
-			"order": 2
+			"order": 1
 		},
 		{
 			"id": "button-1784221182224",
 			"type": "bilibili",
 			"value": "https://space.bilibili.com/522758728?spm_id_from=333.1007.0.0",
 			"label": "Bilibili",
+			"order": 2
+		},
+		{
+			"id": "button-1784221239331",
+			"type": "email",
+			"value": "xnj13735326873@gmail.com",
+			"label": "",
 			"order": 3
 		}
 	],
