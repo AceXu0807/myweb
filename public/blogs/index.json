@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "slug": "zatan_01",
+    "title": "今天刚开的blog",
+    "tags": [],
+    "date": "2026-07-17T00:00",
+    "summary": "随手一些",
+    "cover": "/blogs/zatan_01/16a0b4d512f7f007.png",
+    "hidden": false,
+    "category": "生活记录"
+  }
+]
