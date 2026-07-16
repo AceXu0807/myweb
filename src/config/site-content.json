@@ -54,9 +54,13 @@
 		{
 			"id": "983217a44b057ad5",
 			"url": "/images/background/983217a44b057ad5.jpg"
+		},
+		{
+			"id": "55f2ce37ad1cc79b",
+			"url": "/images/background/55f2ce37ad1cc79b.jpg"
 		}
 	],
-	"currentBackgroundImageId": "983217a44b057ad5",
+	"currentBackgroundImageId": "55f2ce37ad1cc79b",
 	"socialButtons": [
 		{
 			"id": "button-1784215849421",
