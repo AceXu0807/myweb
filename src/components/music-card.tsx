@@ -31,6 +31,7 @@ export default function MusicCard() {
 	const currentIndexRef = useRef(0)
 
 	const isHomePage = pathname === '/'
+	const isMusicPage = pathname === '/music'
 
 	const position = useMemo(() => {
 		// If not on home page, always position at bottom-right corner when playing
@@ -117,6 +118,13 @@ export default function MusicCard() {
 		}
 	}, [isPlaying])
 
+	// The music page has its own full player, so stop and hide the floating home player there.
+	useEffect(() => {
+		if (!isMusicPage) return
+		audioRef.current?.pause()
+		setIsPlaying(false)
+	}, [isMusicPage])
+
 	// Cleanup on unmount
 	useEffect(() => {
 		return () => {
@@ -132,7 +140,7 @@ export default function MusicCard() {
 	}
 
 	// Hide component if not on home page and not playing
-	if (!isHomePage && !isPlaying) {
+	if (isMusicPage || (!isHomePage && !isPlaying)) {
 		return null
 	}
 
