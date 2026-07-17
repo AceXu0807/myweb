@@ -115,18 +115,15 @@ export default function MusicPage() {
 				}}
 			/>
 
-			<div className='mb-8 flex items-end justify-between gap-4'>
+			<div className='mb-8'>
 				<div>
 					<div className='text-brand mb-2 flex items-center gap-2 text-sm font-medium'><Music2 className='h-4 w-4' /> MUSIC</div>
 					<h1 className='text-3xl font-bold sm:text-4xl'>音乐收藏室</h1>
 					<p className='text-secondary mt-2 text-sm'>在旋律里留一会儿，收藏此刻想听的声音。</p>
 				</div>
-				<motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} onClick={handleAddClick} className='brand-btn shrink-0 gap-2 px-4 py-2.5'>
-					<Plus className='h-4 w-4' /> {isAuth ? '添加音乐' : '导入密钥并添加'}
-				</motion.button>
 			</div>
 
-			<div className='grid items-start gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,.85fr)]'>
+			<div className='grid items-start gap-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,.55fr)]'>
 				<motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className='card relative overflow-hidden p-5 sm:p-8'>
 					<div className='grid items-center gap-8 sm:grid-cols-[minmax(220px,320px)_1fr]'>
 						<div className='relative mx-auto aspect-square w-full max-w-80 overflow-hidden rounded-[2rem] bg-white/40 shadow-xl'>
@@ -183,9 +180,9 @@ export default function MusicPage() {
 					)}
 				</motion.section>
 
-				<motion.aside initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className='card relative min-h-[500px] p-4 sm:p-5'>
+				<motion.aside initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className='card relative flex min-h-[620px] flex-col p-4 sm:p-5'>
 					<div className='mb-4 flex items-center gap-2 px-2'><ListMusic className='text-brand h-5 w-5' /><h2 className='font-bold'>播放列表</h2><span className='text-secondary ml-auto text-xs'>{tracks.length} 首</span></div>
-					<div className='max-h-[440px] space-y-2 overflow-y-auto pr-1'>
+					<div className='min-h-0 flex-1 space-y-2 overflow-y-auto pr-1'>
 						{tracks.map((track, index) => (
 							<button key={track.id} onClick={() => selectTrack(index)} className={cn('flex w-full items-center gap-3 rounded-2xl p-3 text-left transition', index === currentIndex ? 'bg-white/75 shadow-sm' : 'hover:bg-white/45')}>
 								<div className='h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-white/50'>{track.cover ? <img src={track.cover} alt='' className='h-full w-full object-cover' /> : <Music2 className='text-brand m-3 h-6 w-6' />}</div>
@@ -193,6 +190,11 @@ export default function MusicPage() {
 								{index === currentIndex && isPlaying ? <Pause className='text-brand h-4 w-4' /> : <Play className='text-secondary h-4 w-4' />}
 							</button>
 						))}
+					</div>
+					<div className='mt-5 border-t border-white/35 pt-4'>
+						<motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={handleAddClick} className='brand-btn w-full justify-center gap-2 px-4 py-3'>
+							<Plus className='h-4 w-4' /> {isAuth ? '添加音乐' : '导入密钥并添加'}
+						</motion.button>
 					</div>
 				</motion.aside>
 			</div>
