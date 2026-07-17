@@ -183,43 +183,23 @@ export default function ClockPage() {
 
 				{/* Timer Input (only for timer mode when not running) */}
 				{mode === 'timer' && !isRunning && timerTime === 0 && (
-					<motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className='card relative space-y-4'>
-						<div className='flex items-center justify-center gap-4'>
-							<div className='flex flex-col items-center gap-2'>
-								<label className='text-secondary text-xs'>时</label>
-								<input
-									type='number'
-									min='0'
-									max='23'
-									value={timerInput.hours}
-									onChange={e => setTimerInput({ ...timerInput, hours: Math.max(0, Math.min(23, parseInt(e.target.value) || 0)) })}
-									className='no-spinner w-20 rounded-xl border bg-white/60 px-4 py-3 text-center text-2xl font-bold backdrop-blur-sm focus:bg-white/80'
-								/>
-							</div>
-							<div className='text-secondary mt-8 text-2xl font-bold'>:</div>
-							<div className='flex flex-col items-center gap-2'>
-								<label className='text-secondary text-xs'>分</label>
-								<input
-									type='number'
-									min='0'
-									max='59'
-									value={timerInput.minutes}
-									onChange={e => setTimerInput({ ...timerInput, minutes: Math.max(0, Math.min(59, parseInt(e.target.value) || 0)) })}
-									className='no-spinner w-20 rounded-xl border bg-white/60 px-4 py-3 text-center text-2xl font-bold backdrop-blur-sm focus:bg-white/80'
-								/>
-							</div>
-							<div className='text-secondary mt-8 text-2xl font-bold'>:</div>
-							<div className='flex flex-col items-center gap-2'>
-								<label className='text-secondary text-xs'>秒</label>
-								<input
-									type='number'
-									min='0'
-									max='59'
-									value={timerInput.seconds}
-									onChange={e => setTimerInput({ ...timerInput, seconds: Math.max(0, Math.min(59, parseInt(e.target.value) || 0)) })}
-									className='no-spinner w-20 rounded-xl border bg-white/60 px-4 py-3 text-center text-2xl font-bold backdrop-blur-sm focus:bg-white/80'
-								/>
-							</div>
+					<motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className='card relative px-4 py-5 sm:px-8'>
+						<div className='grid grid-cols-[1fr_auto_1fr_auto_1fr] items-end gap-2 sm:gap-5'>
+							<TimeWheel label='时' value={timerInput.hours} max={23} onChange={hours => setTimerInput(prev => ({ ...prev, hours }))} />
+							<span className='text-secondary mb-[58px] text-2xl font-bold'>:</span>
+							<TimeWheel
+								label='分'
+								value={timerInput.minutes}
+								max={59}
+								onChange={minutes => setTimerInput(prev => ({ ...prev, minutes }))}
+							/>
+							<span className='text-secondary mb-[58px] text-2xl font-bold'>:</span>
+							<TimeWheel
+								label='秒'
+								value={timerInput.seconds}
+								max={59}
+								onChange={seconds => setTimerInput(prev => ({ ...prev, seconds }))}
+							/>
 						</div>
 					</motion.div>
 				)}
@@ -273,6 +253,110 @@ export default function ClockPage() {
 					</div>
 				)}
 			</motion.div>
+		</div>
+	)
+}
+
+const WHEEL_ITEM_HEIGHT = 52
+
+interface TimeWheelProps {
+	label: string
+	value: number
+	max: number
+	onChange: (value: number) => void
+}
+
+function TimeWheel({ label, value, max, onChange }: TimeWheelProps) {
+	const scrollRef = useRef<HTMLDivElement>(null)
+	const scrollEndTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+	const wheelLockRef = useRef(false)
+	const itemCount = max + 1
+	const repeatedValues = Array.from({ length: itemCount * 5 }, (_, index) => index % itemCount)
+
+	useEffect(() => {
+		const wheel = scrollRef.current
+		if (wheel) wheel.scrollTop = (itemCount * 2 + value) * WHEEL_ITEM_HEIGHT
+
+		return () => {
+			if (scrollEndTimerRef.current) clearTimeout(scrollEndTimerRef.current)
+		}
+	}, [])
+
+	const selectIndex = (nextIndex: number, behavior: ScrollBehavior = 'smooth') => {
+		const normalizedIndex = Math.max(0, Math.min(repeatedValues.length - 1, nextIndex))
+		onChange(normalizedIndex % itemCount)
+		scrollRef.current?.scrollTo({ top: normalizedIndex * WHEEL_ITEM_HEIGHT, behavior })
+	}
+
+	const moveOneStep = (direction: 1 | -1) => {
+		const currentIndex = Math.round((scrollRef.current?.scrollTop ?? 0) / WHEEL_ITEM_HEIGHT)
+		selectIndex(currentIndex + direction)
+	}
+
+	return (
+		<div className='flex min-w-0 flex-col items-center gap-2'>
+		<span className='text-secondary text-xs'>{label}</span>
+		<div className='relative w-full max-w-24 overflow-hidden rounded-2xl border bg-white/45 shadow-inner backdrop-blur-sm'>
+			<div aria-hidden='true' className='pointer-events-none absolute top-[52px] right-1 left-1 z-10 h-[52px] rounded-xl border border-brand/25 bg-white/55' />
+			<div aria-hidden='true' className='from-card pointer-events-none absolute inset-x-0 top-0 z-20 h-12 bg-gradient-to-b to-transparent' />
+			<div aria-hidden='true' className='from-card pointer-events-none absolute inset-x-0 bottom-0 z-20 h-12 bg-gradient-to-t to-transparent' />
+			<div
+				ref={scrollRef}
+				role='spinbutton'
+				tabIndex={0}
+				aria-label={`${label}数`}
+				aria-valuemin={0}
+				aria-valuemax={max}
+				aria-valuenow={value}
+				onScroll={event => {
+					const wheelElement = event.currentTarget
+					const currentIndex = Math.round(wheelElement.scrollTop / WHEEL_ITEM_HEIGHT)
+					const nextValue = currentIndex % itemCount
+					if (nextValue !== value) onChange(nextValue)
+
+					if (scrollEndTimerRef.current) clearTimeout(scrollEndTimerRef.current)
+					scrollEndTimerRef.current = setTimeout(() => {
+						if (currentIndex < itemCount || currentIndex >= itemCount * 4) {
+							wheelElement.scrollTop = (itemCount * 2 + nextValue) * WHEEL_ITEM_HEIGHT
+						}
+					}, 120)
+				}}
+				onWheel={event => {
+					event.preventDefault()
+					if (wheelLockRef.current || event.deltaY === 0) return
+					wheelLockRef.current = true
+					moveOneStep(event.deltaY > 0 ? 1 : -1)
+					setTimeout(() => {
+						wheelLockRef.current = false
+					}, 90)
+				}}
+				onKeyDown={event => {
+					if (event.key === 'ArrowUp') {
+						event.preventDefault()
+						moveOneStep(-1)
+					}
+					if (event.key === 'ArrowDown') {
+						event.preventDefault()
+						moveOneStep(1)
+					}
+				}}
+				className='h-[156px] snap-y snap-mandatory overflow-y-auto overscroll-contain scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
+				<div aria-hidden='true' className='h-[52px]' />
+				{repeatedValues.map((item, index) => (
+					<button
+						type='button'
+						key={`${item}-${index}`}
+						onClick={() => selectIndex(index)}
+						className={cn(
+							'flex h-[52px] w-full snap-center items-center justify-center text-xl font-bold transition-all duration-150',
+							item === value ? 'text-primary scale-110' : 'text-secondary/45 scale-90'
+						)}>
+						{item.toString().padStart(2, '0')}
+					</button>
+				))}
+				<div aria-hidden='true' className='h-[52px]' />
+			</div>
+		</div>
 		</div>
 	)
 }
