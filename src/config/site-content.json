@@ -74,9 +74,13 @@
 		{
 			"id": "d6b5c3c041678305",
 			"url": "/images/background/d6b5c3c041678305.jpg"
+		},
+		{
+			"id": "946069101ec50357",
+			"url": "/images/background/946069101ec50357.jpg"
 		}
 	],
-	"currentBackgroundImageId": "d6b5c3c041678305",
+	"currentBackgroundImageId": "946069101ec50357",
 	"socialButtons": [
 		{
 			"id": "button-1784215849421",
