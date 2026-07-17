@@ -33,12 +33,12 @@
 		"enabled": true
 	},
 	"musicCard": {
-		"width": 293,
-		"height": 66,
+		"width": 516,
+		"height": 69,
 		"offset": 120,
 		"order": 6,
 		"offsetX": -158,
-		"offsetY": 228,
+		"offsetY": 294,
 		"enabled": true
 	},
 	"socialButtons": {
@@ -61,8 +61,8 @@
 		"width": 336,
 		"height": 161,
 		"order": 8,
-		"offsetX": -608,
-		"offsetY": 176,
+		"offsetX": -533,
+		"offsetY": 231,
 		"enabled": true
 	},
 	"writeButtons": {
@@ -77,16 +77,16 @@
 		"width": 344,
 		"height": 497,
 		"order": 2,
-		"offsetX": -612,
-		"offsetY": -284,
+		"offsetX": -596,
+		"offsetY": -308,
 		"enabled": true
 	},
 	"likePosition": {
 		"width": 54,
 		"height": 54,
 		"order": 8,
-		"offsetX": 217,
-		"offsetY": 251,
+		"offsetX": 198,
+		"offsetY": 189,
 		"enabled": true
 	},
 	"hatCard": {
