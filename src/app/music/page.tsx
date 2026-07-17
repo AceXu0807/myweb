@@ -126,8 +126,8 @@ export default function MusicPage() {
 				</motion.button>
 			</div>
 
-			<div className='grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,.85fr)]'>
-				<motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className='card overflow-hidden p-5 sm:p-8'>
+			<div className='grid items-start gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,.85fr)]'>
+				<motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className='card relative overflow-hidden p-5 sm:p-8'>
 					<div className='grid items-center gap-8 sm:grid-cols-[minmax(220px,320px)_1fr]'>
 						<div className='relative mx-auto aspect-square w-full max-w-80 overflow-hidden rounded-[2rem] bg-white/40 shadow-xl'>
 							{currentTrack?.cover ? (
@@ -183,9 +183,9 @@ export default function MusicPage() {
 					)}
 				</motion.section>
 
-				<motion.aside initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className='card p-4 sm:p-5'>
+				<motion.aside initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className='card relative min-h-[500px] p-4 sm:p-5'>
 					<div className='mb-4 flex items-center gap-2 px-2'><ListMusic className='text-brand h-5 w-5' /><h2 className='font-bold'>播放列表</h2><span className='text-secondary ml-auto text-xs'>{tracks.length} 首</span></div>
-					<div className='max-h-[530px] space-y-2 overflow-y-auto pr-1'>
+					<div className='max-h-[440px] space-y-2 overflow-y-auto pr-1'>
 						{tracks.map((track, index) => (
 							<button key={track.id} onClick={() => selectTrack(index)} className={cn('flex w-full items-center gap-3 rounded-2xl p-3 text-left transition', index === currentIndex ? 'bg-white/75 shadow-sm' : 'hover:bg-white/45')}>
 								<div className='h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-white/50'>{track.cover ? <img src={track.cover} alt='' className='h-full w-full object-cover' /> : <Music2 className='text-brand m-3 h-6 w-6' />}</div>
