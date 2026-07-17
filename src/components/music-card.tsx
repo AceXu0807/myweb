@@ -9,13 +9,14 @@ import MusicSVG from '@/svgs/music.svg'
 import PlaySVG from '@/svgs/play.svg'
 import { HomeDraggableLayer } from '../app/(home)/home-draggable-layer'
 import { Pause } from 'lucide-react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import clsx from 'clsx'
 
 const MUSIC_FILES = ['/music/close-to-you.mp3']
 
 export default function MusicCard() {
 	const pathname = usePathname()
+	const router = useRouter()
 	const center = useCenterStore()
 	const { cardStyles, siteContent } = useConfigStore()
 	const styles = cardStyles.musicCard
@@ -137,7 +138,8 @@ export default function MusicCard() {
 
 	return (
 		<HomeDraggableLayer cardKey='musicCard' x={x} y={y} width={styles.width} height={styles.height}>
-			<Card order={styles.order} width={styles.width} height={styles.height} x={x} y={y} className={clsx('flex items-center gap-3', !isHomePage && 'fixed')}>
+			<Card order={styles.order} width={styles.width} height={styles.height} x={x} y={y} className={clsx('relative flex items-center gap-3', !isHomePage && 'fixed')}>
+				<button type='button' aria-label='打开音乐面板' onClick={() => router.push('/music')} className='absolute inset-0 z-10 cursor-pointer rounded-[inherit]' />
 				{siteContent.enableChristmas && (
 					<>
 						<img
@@ -155,9 +157,9 @@ export default function MusicCard() {
 					</>
 				)}
 
-				<MusicSVG className='h-8 w-8' />
+				<MusicSVG className='pointer-events-none relative z-20 h-8 w-8' />
 
-				<div className='flex-1'>
+				<div className='pointer-events-none relative z-20 flex-1'>
 					<div className='text-secondary text-sm'>Close To You</div>
 
 					<div className='mt-1 h-2 rounded-full bg-white/60'>
@@ -165,7 +167,7 @@ export default function MusicCard() {
 					</div>
 				</div>
 
-				<button onClick={togglePlayPause} className='flex h-10 w-10 items-center justify-center rounded-full bg-white transition-opacity hover:opacity-80'>
+				<button onClick={togglePlayPause} className='relative z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white transition-opacity hover:opacity-80'>
 					{isPlaying ? <Pause className='text-brand h-4 w-4' /> : <PlaySVG className='text-brand ml-1 h-4 w-4' />}
 				</button>
 			</Card>
