@@ -19,7 +19,7 @@ import WebsiteFilledSVG from '@/svgs/website-filled.svg'
 import WebsiteOutlineSVG from '@/svgs/website-outline.svg'
 import MusicSVG from '@/svgs/music.svg'
 import { Music2 } from 'lucide-react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import clsx from 'clsx'
 import { cn } from '@/lib/utils'
 import { useSize } from '@/hooks/use-size'
@@ -69,6 +69,7 @@ const extraSize = 8
 
 export default function NavCard() {
 	const pathname = usePathname()
+	const router = useRouter()
 	const center = useCenterStore()
 	const [show, setShow] = useState(false)
 	const { maxSM } = useSize()
@@ -93,7 +94,7 @@ export default function NavCard() {
 	}, [pathname])
 	if (maxSM) form = 'icons'
 
-	const itemHeight = form === 'full' ? 52 : 28
+	const itemSize = form === 'full' ? 52 : form === 'icons' ? 44 : 28
 
 	let position = useMemo(() => {
 		if (form === 'full') {
@@ -110,7 +111,7 @@ export default function NavCard() {
 
 	const size = useMemo(() => {
 		if (form === 'mini') return { width: 64, height: 64 }
-		else if (form === 'icons') return { width: 392, height: 64 }
+		else if (form === 'icons') return { width: 416, height: 64 }
 		else return { width: styles.width, height: styles.height }
 	}, [form, styles])
 
@@ -134,7 +135,7 @@ export default function NavCard() {
 					height={size.height}
 					x={position.x}
 					y={position.y}
-					className={clsx(form != 'full' && 'overflow-hidden', form === 'mini' && 'p-3', form === 'icons' && 'flex items-center gap-6 p-3')}>
+					className={clsx(form != 'full' && 'overflow-hidden', form === 'mini' && 'p-3', form === 'icons' && 'flex items-center gap-4 p-3')}>
 					{form === 'full' && siteContent.enableChristmas && (
 						<>
 							<img
@@ -156,20 +157,20 @@ export default function NavCard() {
 						<>
 							{form !== 'icons' && <div className='text-secondary mt-6 text-sm uppercase'>General</div>}
 
-							<div className={cn('relative mt-2 space-y-2', form === 'icons' && 'mt-0 flex items-center gap-6 space-y-0')}>
+							<div className={cn('relative mt-2 space-y-2', form === 'icons' && 'mt-0 flex items-center gap-4 space-y-0')}>
 								<motion.div
-									className='absolute max-w-[230px] rounded-full border'
+									className='pointer-events-none absolute max-w-[230px] rounded-full border'
 									layoutId='nav-hover'
 									initial={false}
 									animate={
 										form === 'icons'
 											? {
-													left: hoveredIndex * (itemHeight + 24) - extraSize,
+													left: hoveredIndex * (itemSize + 16) - extraSize,
 													top: -extraSize,
-													width: itemHeight + extraSize * 2,
-													height: itemHeight + extraSize * 2
-												}
-											: { top: hoveredIndex * (itemHeight + 8), left: 0, width: '100%', height: itemHeight }
+													width: itemSize + extraSize * 2,
+													height: itemSize + extraSize * 2
+											  }
+											: { top: hoveredIndex * (itemSize + 8), left: 0, width: '100%', height: itemSize }
 									}
 									transition={{
 										type: 'spring',
@@ -183,8 +184,13 @@ export default function NavCard() {
 									<Link
 										key={item.href}
 										href={item.href}
-										className={cn('text-secondary text-md relative z-10 flex items-center gap-3 rounded-full px-5 py-3', form === 'icons' && 'p-0')}
-										onMouseEnter={() => setHoveredIndex(index)}>
+										className={cn('text-secondary text-md relative z-10 flex items-center gap-3 rounded-full px-5 py-3', form === 'icons' && 'h-11 w-11 shrink-0 justify-center p-0')}
+										aria-label={item.label}
+										onPointerEnter={() => setHoveredIndex(index)}
+										onClick={event => {
+											event.preventDefault()
+											router.push(item.href)
+										}}>
 										<div className='flex h-7 w-7 items-center justify-center'>
 											{hoveredIndex == index ? <item.iconActive className='text-brand absolute h-7 w-7' /> : <item.icon className='absolute h-7 w-7' />}
 										</div>
