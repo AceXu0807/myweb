@@ -1,7 +1,16 @@
 import { NextConfig } from 'next'
 import { codeInspectorPlugin } from 'code-inspector-plugin'
 
+const isGitHubPages = process.env.GITHUB_ACTIONS === 'true'
+
 const nextConfig: NextConfig = {
+	output: isGitHubPages ? 'export' : undefined,
+	basePath: isGitHubPages ? '/myweb' : undefined,
+	assetPrefix: isGitHubPages ? '/myweb/' : undefined,
+	trailingSlash: isGitHubPages,
+	images: {
+		unoptimized: isGitHubPages
+	},
 	devIndicators: false,
 	reactStrictMode: false,
 	reactCompiler: true,
@@ -34,8 +43,9 @@ const nextConfig: NextConfig = {
 		return config
 	},
 
-	async redirects() {
-		return [
+	redirects: isGitHubPages
+		? undefined
+		: async () => [
 			{
 				source: '/zh',
 				destination: '/',
@@ -47,7 +57,6 @@ const nextConfig: NextConfig = {
 				permanent: true
 			}
 		]
-	}
 }
 
 export default nextConfig
