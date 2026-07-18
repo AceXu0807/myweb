@@ -1,6 +1,7 @@
 'use client'
 
 import useSWR from 'swr'
+import { withBasePath } from '@/lib/site-path'
 
 export type CategoriesConfig = {
 	categories: string[]
@@ -22,7 +23,7 @@ const fetcher = async (url: string): Promise<CategoriesConfig> => {
 }
 
 export function useCategories() {
-	const { data, error, isLoading } = useSWR<CategoriesConfig>('/blogs/categories.json', fetcher, {
+	const { data, error, isLoading } = useSWR<CategoriesConfig>(withBasePath('/blogs/categories.json'), fetcher, {
 		revalidateOnFocus: false,
 		revalidateOnReconnect: true
 	})
@@ -33,4 +34,3 @@ export function useCategories() {
 		error
 	}
 }
-
