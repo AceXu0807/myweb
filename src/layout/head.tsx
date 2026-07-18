@@ -1,13 +1,12 @@
 import Script from 'next/script'
-import { withBasePath } from '@/lib/site-path'
 
 export default function Head() {
 	return (
 		<head>
 			<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
-			<link rel='manifest' href={withBasePath('/manifest.json')} />
+			<link rel='manifest' href='/manifest.json' />
 
-			<link rel='icon' href={withBasePath('/favicon.png')} />
+			<link rel='icon' href='/favicon.png' />
 
 			<link rel='preconnect' href='https://fonts.googleapis.cn' />
 			<link rel='preconnect' href='https://fonts.gstatic.cn' crossOrigin='anonymous' />
