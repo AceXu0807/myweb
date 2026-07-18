@@ -1,7 +1,7 @@
 'use client'
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import { useCenterInit } from '@/hooks/use-center'
-import BlurredBubblesBackground from './backgrounds/blurred-bubbles'
 import NavCard from '@/components/nav-card'
 import { Toaster } from 'sonner'
 import { CircleCheckIcon, InfoIcon, Loader2Icon, OctagonXIcon, TriangleAlertIcon } from 'lucide-react'
@@ -10,7 +10,10 @@ import { useConfigStore } from '@/app/(home)/stores/config-store'
 import { ScrollTopButton } from '@/components/scroll-top-button'
 import MusicCard from '@/components/music-card'
 
+const BlurredBubblesBackground = dynamic(() => import('./backgrounds/blurred-bubbles'), { ssr: false })
+
 export default function Layout({ children }: PropsWithChildren) {
+	const [showBackgroundEffects, setShowBackgroundEffects] = useState(false)
 	useCenterInit()
 	useSizeInit()
 	const { cardStyles, siteContent, regenerateKey } = useConfigStore()
@@ -20,6 +23,17 @@ export default function Layout({ children }: PropsWithChildren) {
 	const currentBackgroundImageId = siteContent.currentBackgroundImageId
 	const currentBackgroundImage =
 		currentBackgroundImageId && currentBackgroundImageId.trim() ? backgroundImages.find(item => item.id === currentBackgroundImageId) : null
+
+	useEffect(() => {
+		const loadEffects = () => setShowBackgroundEffects(true)
+		const idleCallback = window.requestIdleCallback?.(loadEffects, { timeout: 1200 })
+		const timeoutId = idleCallback ? undefined : window.setTimeout(loadEffects, 900)
+
+		return () => {
+			if (idleCallback) window.cancelIdleCallback?.(idleCallback)
+			if (timeoutId) window.clearTimeout(timeoutId)
+		}
+	}, [])
 
 	return (
 		<>
@@ -50,7 +64,7 @@ export default function Layout({ children }: PropsWithChildren) {
 					}}
 				/>
 			)}
-			<BlurredBubblesBackground colors={siteContent.backgroundColors} regenerateKey={regenerateKey} />
+			{showBackgroundEffects && <BlurredBubblesBackground colors={siteContent.backgroundColors} regenerateKey={regenerateKey} />}
 
 			<main className='relative z-10 h-full'>
 				{children}
