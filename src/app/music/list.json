@@ -4,5 +4,12 @@
 		"title": "Close To You",
 		"artist": "Carpenters",
 		"audio": "/music/close-to-you.mp3"
+	},
+	{
+		"id": "1784345867545-13fd22cc679a28",
+		"title": "普通朋友",
+		"artist": "陶喆",
+		"audio": "/music/uploads/fbe59f3bfdfa734c.png",
+		"cover": "/images/music/44e83137e5b99d54.webp"
 	}
 ]
