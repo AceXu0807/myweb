@@ -4,6 +4,7 @@ import { useConfigStore } from './stores/config-store'
 import { CARD_SPACING } from '@/consts'
 import { useRouter } from 'next/navigation'
 import { HomeDraggableLayer } from './home-draggable-layer'
+import { withBasePath } from '@/lib/site-path'
 
 export default function ArtCard() {
 	const center = useCenterStore()
@@ -34,7 +35,7 @@ export default function ArtCard() {
 					</>
 				)}
 
-				<img onClick={() => router.push('/pictures')} src={artUrl} alt='wall art' className='h-full w-full rounded-[32px] object-cover' />
+				<img onClick={() => router.push('/pictures')} src={withBasePath(artUrl)} alt='wall art' className='h-full w-full rounded-[32px] object-cover' />
 			</Card>
 		</HomeDraggableLayer>
 	)
