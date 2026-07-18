@@ -1,6 +1,7 @@
 import useSWR from 'swr'
 import { useAuthStore } from '@/hooks/use-auth'
 import type { BlogIndexItem } from '@/app/blog/types'
+import { withBasePath } from '@/lib/site-path'
 
 export type { BlogIndexItem } from '@/app/blog/types'
 
@@ -18,7 +19,7 @@ const fetcher = async (url: string) => {
 
 export function useBlogIndex() {
 	const { isAuth } = useAuthStore()
-	const { data, error, isLoading } = useSWR<BlogIndexItem[]>('/blogs/index.json', fetcher, {
+	const { data, error, isLoading } = useSWR<BlogIndexItem[]>(withBasePath('/blogs/index.json'), fetcher, {
 		revalidateOnFocus: false,
 		revalidateOnReconnect: true
 	})
