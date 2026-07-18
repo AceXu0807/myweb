@@ -4,7 +4,6 @@ import type { Metadata } from 'next'
 import Layout from '@/layout'
 import Head from '@/layout/head'
 import siteContent from '@/config/site-content.json'
-import { withBasePath } from '@/lib/site-path'
 
 const {
 	meta: { title, description },
@@ -25,7 +24,7 @@ export const metadata: Metadata = {
 }
 
 const htmlStyle = {
-	cursor: `url(${withBasePath('/images/cursor.svg')}) 2 1, auto`,
+	cursor: 'url(/images/cursor.svg) 2 1, auto',
 	'--color-brand': theme.colorBrand,
 	'--color-primary': theme.colorPrimary,
 	'--color-secondary': theme.colorSecondary,
