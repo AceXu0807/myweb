@@ -6,16 +6,16 @@
 	},
 	"theme": {
 		"colorBrand": "#2fcbe7",
-		"colorPrimary": "#252525",
-		"colorSecondary": "#797979",
+		"colorPrimary": "#413a39",
+		"colorSecondary": "#897261",
 		"colorBrandSecondary": "#eec25e",
 		"colorBg": "#d4e8f3",
-		"colorBorder": "#90cd7077",
-		"colorCard": "#9eecdb7e",
+		"colorBorder": "#a0c98a",
+		"colorCard": "#8bcdbe7e",
 		"colorArticle": "#ece3b6dd"
 	},
 	"backgroundColors": [
-		"#7ff1f394",
+		"#dbc132a9",
 		"#5fa8b5",
 		"#fffef8"
 	],
@@ -46,7 +46,7 @@
 		},
 		{
 			"id": "4400fe661d33be95",
-			"url": "/images/art/4400fe661d33be95.jpg"
+			"url": "/images/art/4400fe661d33be95.webp"
 		}
 	],
 	"currentArtImageId": "4400fe661d33be95",
@@ -73,14 +73,10 @@
 		},
 		{
 			"id": "d6b5c3c041678305",
-			"url": "/images/background/d6b5c3c041678305.jpg"
-		},
-		{
-			"id": "946069101ec50357",
-			"url": "/images/background/946069101ec50357.jpg"
+			"url": "/images/background/d6b5c3c041678305.webp"
 		}
 	],
-	"currentBackgroundImageId": "946069101ec50357",
+	"currentBackgroundImageId": "d6b5c3c041678305",
 	"socialButtons": [
 		{
 			"id": "button-1784215849421",
