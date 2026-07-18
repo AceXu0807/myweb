@@ -4,63 +4,22 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion } from 'motion/react'
 import { Disc3, ListMusic, Music2, Pause, Play, Plus, SkipBack, SkipForward, Upload, Volume2, X } from 'lucide-react'
 import { toast } from 'sonner'
-import initialList from './list.json'
 import type { MusicTrack } from './types'
 import { pushMusic } from './services/push-music'
 import { useAuthStore } from '@/hooks/use-auth'
 import { DialogModal } from '@/components/dialog-modal'
 import { cn } from '@/lib/utils'
+import { useMusicPlayer } from '@/hooks/use-music-player'
 
 const MAX_AUDIO_SIZE = 25 * 1024 * 1024
 
 export default function MusicPage() {
-	const [tracks, setTracks] = useState<MusicTrack[]>(initialList as MusicTrack[])
-	const [currentIndex, setCurrentIndex] = useState(0)
-	const [isPlaying, setIsPlaying] = useState(false)
-	const [progress, setProgress] = useState(0)
-	const [duration, setDuration] = useState(0)
-	const [volume, setVolume] = useState(0.8)
 	const [uploadOpen, setUploadOpen] = useState(false)
 	const [isSaving, setIsSaving] = useState(false)
-	const audioRef = useRef<HTMLAudioElement>(null)
 	const keyInputRef = useRef<HTMLInputElement>(null)
 	const { isAuth, setPrivateKey } = useAuthStore()
+	const { tracks, currentIndex, isPlaying, progress, duration, volume, setTracks, selectTrack, togglePlayPause, previousTrack, nextTrack, seek, setVolume } = useMusicPlayer()
 	const currentTrack = tracks[currentIndex]
-
-	useEffect(() => {
-		const audio = audioRef.current
-		if (!audio) return
-		audio.volume = volume
-	}, [volume])
-
-	useEffect(() => {
-		setProgress(0)
-		setDuration(0)
-		if (isPlaying) audioRef.current?.play().catch(() => setIsPlaying(false))
-	}, [currentIndex])
-
-	const selectTrack = (index: number) => {
-		setCurrentIndex(index)
-		setIsPlaying(true)
-	}
-
-	const togglePlay = async () => {
-		const audio = audioRef.current
-		if (!audio) return
-		if (audio.paused) {
-			await audio.play()
-			setIsPlaying(true)
-		} else {
-			audio.pause()
-			setIsPlaying(false)
-		}
-	}
-
-	const moveTrack = (direction: 1 | -1) => {
-		if (!tracks.length) return
-		setCurrentIndex(index => (index + direction + tracks.length) % tracks.length)
-		setIsPlaying(true)
-	}
 
 	const handleAddClick = () => {
 		if (isAuth) setUploadOpen(true)
@@ -90,7 +49,7 @@ export default function MusicPage() {
 		try {
 			const publishedTracks = await pushMusic(nextTracks, { trackId: id, audioFile: data.audioFile, coverFile: data.coverFile })
 			setTracks(publishedTracks)
-			setCurrentIndex(publishedTracks.length - 1)
+			await selectTrack(publishedTracks.length - 1, false)
 			setUploadOpen(false)
 			toast.success('音乐已发布，Vercel 正在更新')
 		} catch (error) {
@@ -147,8 +106,7 @@ export default function MusicPage() {
 									value={Math.min(progress, duration || 0)}
 									onChange={event => {
 										const time = Number(event.target.value)
-										if (audioRef.current) audioRef.current.currentTime = time
-										setProgress(time)
+										seek(time)
 									}}
 									className='accent-brand w-full'
 								/>
@@ -156,35 +114,24 @@ export default function MusicPage() {
 							</div>
 
 							<div className='mt-6 flex items-center justify-center gap-4 sm:justify-start'>
-								<button onClick={() => moveTrack(-1)} className='rounded-full bg-white/55 p-3 transition hover:bg-white/80' aria-label='上一首'><SkipBack className='h-5 w-5' /></button>
-								<button onClick={togglePlay} className='bg-brand flex h-16 w-16 items-center justify-center rounded-full text-white shadow-lg transition hover:scale-105' aria-label={isPlaying ? '暂停' : '播放'}>
+								<button onClick={() => void previousTrack()} className='rounded-full bg-white/55 p-3 transition hover:bg-white/80' aria-label='上一首'><SkipBack className='h-5 w-5' /></button>
+								<button onClick={() => void togglePlayPause()} className='bg-brand flex h-16 w-16 items-center justify-center rounded-full text-white shadow-lg transition hover:scale-105' aria-label={isPlaying ? '暂停' : '播放'}>
 									{isPlaying ? <Pause className='h-7 w-7' /> : <Play className='ml-1 h-7 w-7' />}
 								</button>
-								<button onClick={() => moveTrack(1)} className='rounded-full bg-white/55 p-3 transition hover:bg-white/80' aria-label='下一首'><SkipForward className='h-5 w-5' /></button>
+								<button onClick={() => void nextTrack()} className='rounded-full bg-white/55 p-3 transition hover:bg-white/80' aria-label='下一首'><SkipForward className='h-5 w-5' /></button>
 							</div>
 
 							<div className='mt-6 flex items-center gap-3'><Volume2 className='text-secondary h-4 w-4' /><input type='range' min={0} max={1} step={0.05} value={volume} onChange={event => setVolume(Number(event.target.value))} className='accent-brand w-full max-w-44' /></div>
 						</div>
 					</div>
 
-					{currentTrack && (
-						<audio
-							ref={audioRef}
-							src={currentTrack.audio}
-							onTimeUpdate={event => setProgress(event.currentTarget.currentTime)}
-							onLoadedMetadata={event => setDuration(event.currentTarget.duration || 0)}
-							onPlay={() => setIsPlaying(true)}
-							onPause={() => setIsPlaying(false)}
-							onEnded={() => moveTrack(1)}
-						/>
-					)}
 				</motion.section>
 
 				<motion.aside initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className='card relative flex min-h-[620px] flex-col p-4 sm:p-5'>
 					<div className='mb-4 flex items-center gap-2 px-2'><ListMusic className='text-brand h-5 w-5' /><h2 className='font-bold'>播放列表</h2><span className='text-secondary ml-auto text-xs'>{tracks.length} 首</span></div>
 					<div className='min-h-0 flex-1 space-y-2 overflow-y-auto pr-1'>
 						{tracks.map((track, index) => (
-							<button key={track.id} onClick={() => selectTrack(index)} className={cn('flex w-full items-center gap-3 rounded-2xl p-3 text-left transition', index === currentIndex ? 'bg-white/75 shadow-sm' : 'hover:bg-white/45')}>
+							<button key={track.id} onClick={() => void selectTrack(index)} className={cn('flex w-full items-center gap-3 rounded-2xl p-3 text-left transition', index === currentIndex ? 'bg-white/75 shadow-sm' : 'hover:bg-white/45')}>
 								<div className='h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-white/50'>{track.cover ? <img src={track.cover} alt='' className='h-full w-full object-cover' /> : <Music2 className='text-brand m-3 h-6 w-6' />}</div>
 								<div className='min-w-0 flex-1'><p className='truncate text-sm font-semibold'>{track.title}</p><p className='text-secondary truncate text-xs'>{track.artist}</p></div>
 								{index === currentIndex && isPlaying ? <Pause className='text-brand h-4 w-4' /> : <Play className='text-secondary h-4 w-4' />}
