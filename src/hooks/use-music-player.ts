@@ -3,6 +3,7 @@
 import { create } from 'zustand'
 import initialList from '@/app/music/list.json'
 import type { MusicTrack } from '@/app/music/types'
+import { withBasePath } from '@/lib/site-path'
 
 type MusicPlayerState = {
 	tracks: MusicTrack[]
@@ -59,10 +60,11 @@ export const useMusicPlayer = create<MusicPlayerState>((set, get) => ({
 		const audio = ensureAudio()
 		if (!audio) return
 
-		const expectedSource = new URL(track.audio, window.location.origin).href
+		const source = withBasePath(track.audio)
+		const expectedSource = new URL(source, window.location.origin).href
 		if (audio.src !== expectedSource) {
 			audio.pause()
-			audio.src = track.audio
+			audio.src = source
 			audio.load()
 			set({ currentIndex: nextIndex, progress: 0, duration: 0, isPlaying: false })
 		} else {
