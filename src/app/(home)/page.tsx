@@ -16,9 +16,11 @@ import { motion } from 'motion/react'
 import { useLayoutEditStore } from './stores/layout-edit-store'
 import { useConfigStore } from './stores/config-store'
 import { toast } from 'sonner'
-import ConfigDialog from './config-dialog/index'
 import { useEffect } from 'react'
-import SnowfallBackground from '@/layout/backgrounds/snowfall'
+import dynamic from 'next/dynamic'
+
+const ConfigDialog = dynamic(() => import('./config-dialog/index'), { ssr: false })
+const SnowfallBackground = dynamic(() => import('@/layout/backgrounds/snowfall'), { ssr: false })
 
 export default function Home() {
 	const { maxSM } = useSize()
@@ -91,7 +93,7 @@ export default function Home() {
 			</div>
 
 			{siteContent.enableChristmas && <SnowfallBackground zIndex={2} count={!maxSM ? 125 : 20} />}
-			<ConfigDialog open={configDialogOpen} onClose={() => setConfigDialogOpen(false)} />
+			{configDialogOpen && <ConfigDialog open onClose={() => setConfigDialogOpen(false)} />}
 		</>
 	)
 }
