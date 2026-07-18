@@ -9,7 +9,6 @@ import { useSize, useSizeInit } from '@/hooks/use-size'
 import { useConfigStore } from '@/app/(home)/stores/config-store'
 import { ScrollTopButton } from '@/components/scroll-top-button'
 import MusicCard from '@/components/music-card'
-import { withBasePath } from '@/lib/site-path'
 
 export default function Layout({ children }: PropsWithChildren) {
 	useCenterInit()
@@ -44,7 +43,7 @@ export default function Layout({ children }: PropsWithChildren) {
 				<div
 					className='fixed inset-0 z-0 overflow-hidden'
 					style={{
-						backgroundImage: `url(${withBasePath(currentBackgroundImage.url)})`,
+						backgroundImage: `url(${currentBackgroundImage.url})`,
 						backgroundSize: 'cover',
 						backgroundPosition: 'center',
 						backgroundRepeat: 'no-repeat'
