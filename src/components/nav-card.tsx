@@ -2,7 +2,6 @@
 
 import Card from '@/components/card'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'motion/react'
 import { useCenterStore } from '@/hooks/use-center'
@@ -116,13 +115,8 @@ export default function NavCard() {
 	}, [form, styles])
 
 	useEffect(() => {
-		if (form === 'icons' && activeIndex !== undefined && hoveredIndex !== activeIndex) {
-			const timer = setTimeout(() => {
-				setHoveredIndex(activeIndex)
-			}, 1500)
-			return () => clearTimeout(timer)
-		}
-	}, [hoveredIndex, activeIndex, form])
+		if (activeIndex !== undefined) setHoveredIndex(activeIndex)
+	}, [activeIndex])
 
 	if (maxSM) position = { x: center.x - size.width / 2, y: 16 }
 
@@ -147,11 +141,22 @@ export default function NavCard() {
 						</>
 					)}
 
-					<Link className='flex items-center gap-3' href='/'>
+					<div
+						className='relative z-20 flex cursor-pointer items-center gap-3'
+						role='link'
+						tabIndex={0}
+						onPointerDown={event => event.stopPropagation()}
+						onClick={event => {
+							event.stopPropagation()
+							router.push('/')
+						}}
+						onKeyDown={event => {
+							if (event.key === 'Enter' || event.key === ' ') router.push('/')
+						}}>
 						<Image src='/images/avatar.jpg' alt='时沐风炎的头像' width={40} height={40} style={{ boxShadow: ' 0 12px 20px -5px #E2D9CE', objectFit: 'cover' }} className='rounded-full' />
 						{form === 'full' && <span className='font-averia mt-1 text-2xl leading-none font-medium'>{siteContent.meta.title}</span>}
 						{form === 'full' && <span className='text-brand mt-2 text-xs font-medium'>个人博客</span>}
-					</Link>
+					</div>
 
 					{(form === 'full' || form === 'icons') && (
 						<>
@@ -181,21 +186,22 @@ export default function NavCard() {
 								/>
 
 								{list.map((item, index) => (
-									<Link
+									<button
 										key={item.href}
-										href={item.href}
+										type='button'
 										className={cn('text-secondary text-md relative z-10 flex items-center gap-3 rounded-full px-5 py-3', form === 'icons' && 'h-11 w-11 shrink-0 justify-center p-0')}
 										aria-label={item.label}
 										onPointerEnter={() => setHoveredIndex(index)}
 										onClick={event => {
-											event.preventDefault()
+											event.stopPropagation()
+											setHoveredIndex(index)
 											router.push(item.href)
 										}}>
 										<div className='flex h-7 w-7 items-center justify-center'>
 											{hoveredIndex == index ? <item.iconActive className='text-brand absolute h-7 w-7' /> : <item.icon className='absolute h-7 w-7' />}
 										</div>
 										{form !== 'icons' && <span className={clsx(index == hoveredIndex && 'text-primary font-medium')}>{item.label}</span>}
-									</Link>
+									</button>
 								))}
 							</div>
 						</>
