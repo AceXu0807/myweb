@@ -1,5 +1,15 @@
 [
   {
+    "slug": "00-01",
+    "title": "每日一言",
+    "tags": [],
+    "date": "2026-07-24T16:35",
+    "summary": "每日一言",
+    "cover": "/blogs/00-01/c309d1b0f01b4846.jpg",
+    "hidden": false,
+    "category": "生活记录"
+  },
+  {
     "slug": "zatan_01",
     "title": "今天刚开的blog",
     "tags": [],
