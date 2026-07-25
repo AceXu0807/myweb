@@ -86,6 +86,10 @@ export default function NavCard() {
 		setShow(true)
 	}, [])
 
+	useEffect(() => {
+		list.forEach(item => router.prefetch(item.href))
+	}, [router])
+
 	let form = useMemo(() => {
 		if (pathname == '/') return 'full'
 		else if (pathname == '/write') return 'mini'
@@ -118,6 +122,10 @@ export default function NavCard() {
 		if (activeIndex !== undefined) setHoveredIndex(activeIndex)
 	}, [activeIndex])
 
+	const navigate = (href: string) => {
+		if (pathname !== href) router.push(href)
+	}
+
 	if (maxSM) position = { x: center.x - size.width / 2, y: 16 }
 
 	if (show)
@@ -141,28 +149,30 @@ export default function NavCard() {
 						</>
 					)}
 
-					<div
-						className='relative z-20 flex cursor-pointer items-center gap-3'
-						role='link'
-						tabIndex={0}
+					<button
+						type='button'
+						className={cn('relative z-20 flex cursor-pointer items-center gap-3 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-white/80', form === 'icons' && 'h-11 w-11 shrink-0 justify-center p-0')}
+						aria-label='返回首页'
 						onPointerDown={event => event.stopPropagation()}
 						onClick={event => {
 							event.stopPropagation()
-							router.push('/')
+							navigate('/')
 						}}
 						onKeyDown={event => {
-							if (event.key === 'Enter' || event.key === ' ') router.push('/')
+							if (event.key === 'Enter' || event.key === ' ') navigate('/')
 						}}>
 						<Image src='/images/avatar.jpg' alt='时沐风炎的头像' width={40} height={40} style={{ boxShadow: ' 0 12px 20px -5px #E2D9CE', objectFit: 'cover' }} className='rounded-full' />
 						{form === 'full' && <span className='font-averia mt-1 text-2xl leading-none font-medium'>{siteContent.meta.title}</span>}
 						{form === 'full' && <span className='text-brand mt-2 text-xs font-medium'>个人博客</span>}
-					</div>
+					</button>
 
 					{(form === 'full' || form === 'icons') && (
 						<>
 							{form !== 'icons' && <div className='text-secondary mt-6 text-sm uppercase'>General</div>}
 
-							<div className={cn('relative mt-2 space-y-2', form === 'icons' && 'mt-0 flex items-center gap-4 space-y-0')}>
+							<div
+								className={cn('relative mt-2 space-y-2', form === 'icons' && 'mt-0 flex items-center gap-4 space-y-0')}
+								onPointerLeave={() => setHoveredIndex(activeIndex ?? 0)}>
 								<motion.div
 									className='pointer-events-none absolute max-w-[230px] rounded-full border'
 									layoutId='nav-hover'
@@ -191,11 +201,13 @@ export default function NavCard() {
 										type='button'
 										className={cn('text-secondary text-md relative z-10 flex items-center gap-3 rounded-full px-5 py-3', form === 'icons' && 'h-11 w-11 shrink-0 justify-center p-0')}
 										aria-label={item.label}
+										aria-current={activeIndex === index ? 'page' : undefined}
 										onPointerEnter={() => setHoveredIndex(index)}
+										onFocus={() => setHoveredIndex(index)}
 										onClick={event => {
 											event.stopPropagation()
 											setHoveredIndex(index)
-											router.push(item.href)
+											navigate(item.href)
 										}}>
 										<div className='flex h-7 w-7 items-center justify-center'>
 											{hoveredIndex == index ? <item.iconActive className='text-brand absolute h-7 w-7' /> : <item.icon className='absolute h-7 w-7' />}
