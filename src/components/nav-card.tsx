@@ -64,7 +64,7 @@ const list = [
 	}
 ]
 
-const extraSize = 8
+const extraSize = 4
 
 export default function NavCard() {
 	const pathname = usePathname()
@@ -114,7 +114,7 @@ export default function NavCard() {
 
 	const size = useMemo(() => {
 		if (form === 'mini') return { width: 64, height: 64 }
-		else if (form === 'icons') return { width: 416, height: 64 }
+		else if (form === 'icons') return { width: 384, height: 64 }
 		else return { width: styles.width, height: styles.height }
 	}, [form, styles])
 
@@ -137,7 +137,7 @@ export default function NavCard() {
 					height={size.height}
 					x={position.x}
 					y={position.y}
-					className={clsx(form != 'full' && 'overflow-hidden', form === 'mini' && 'p-3', form === 'icons' && 'flex items-center gap-4 p-3')}>
+					className={clsx(form != 'full' && 'overflow-hidden', form === 'mini' && 'p-3', form === 'icons' && 'flex items-center gap-2 p-3')}>
 					{form === 'full' && siteContent.enableChristmas && (
 						<>
 							<img
@@ -171,7 +171,7 @@ export default function NavCard() {
 							{form !== 'icons' && <div className='text-secondary mt-6 text-sm uppercase'>General</div>}
 
 							<div
-								className={cn('relative mt-2 space-y-2', form === 'icons' && 'mt-0 flex items-center gap-4 space-y-0')}
+								className={cn('relative mt-2 space-y-2', form === 'icons' && 'mt-0 flex items-center gap-2 space-y-0')}
 								onPointerLeave={() => setHoveredIndex(activeIndex ?? 0)}>
 								<motion.div
 									className='pointer-events-none absolute max-w-[230px] rounded-full border'
@@ -180,7 +180,7 @@ export default function NavCard() {
 									animate={
 										form === 'icons'
 											? {
-													left: hoveredIndex * (itemSize + 16) - extraSize,
+											left: hoveredIndex * (itemSize + 8) - extraSize,
 													top: -extraSize,
 													width: itemSize + extraSize * 2,
 													height: itemSize + extraSize * 2
