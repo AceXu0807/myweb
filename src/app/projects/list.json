@@ -1,1 +1,13 @@
-[]
+[
+	{
+		"name": "潮汐日历",
+		"year": 2026,
+		"image": "blob:https://www.smfy.space/20d73ef8-5190-4c43-8bb3-18ed53e907c9",
+		"url": "https://github.com/AceXu0807/tides-calendar",
+		"description": "半透明 Windows 桌面日历与待办软件",
+		"tags": [
+			"WinForms"
+		],
+		"github": "https://github.com/AceXu0807/tides-calendar"
+	}
+]
